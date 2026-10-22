@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>감자를 노릇하게!</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#17100e;color:#fff;font-family:system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;overflow:hidden}
+body{display:flex;justify-content:center}
+#app{width:min(100vw,520px);height:100dvh;position:relative;background:linear-gradient(#241715,#120b0a);overflow:hidden;touch-action:none}
+.hud{position:absolute;z-index:20;top:10px;left:10px;right:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.card{background:#120b0acc;border:1px solid #ffffff22;border-radius:13px;padding:8px 6px;text-align:center;backdrop-filter:blur(6px)}
+.card b{display:block;font-size:18px}.card span{font-size:11px;color:#dbc9bd}
+#stage{position:absolute;inset:0;background:
+linear-gradient(#0000 96%,#0005 96%),
+repeating-linear-gradient(90deg,#0000 0 54px,#0003 55px 57px),
+repeating-linear-gradient(0deg,#36201b 0 36px,#2b1815 37px 39px)}
+#message{position:absolute;z-index:22;top:76px;left:50%;transform:translateX(-50%);width:90%;text-align:center;font-weight:800;text-shadow:0 2px 4px #000;pointer-events:none}
+#cat{position:absolute;z-index:10;top:66px;width:120px;height:92px;transform:translateX(-50%);transition:left .08s linear;filter:drop-shadow(0 5px 3px #0008)}
+.cat-body{position:absolute;left:29px;top:34px;width:70px;height:43px;background:#d96d22;border:3px solid #3a2016;border-radius:50% 50% 45% 45%;transform:skewX(-7deg)}
+.cat-head{position:absolute;left:4px;top:17px;width:53px;height:49px;background:#e47a29;border:3px solid #3a2016;border-radius:44% 48% 48% 45%}
+.cat-head:before,.cat-head:after{content:"";position:absolute;top:-17px;width:20px;height:25px;background:#e47a29;border:3px solid #3a2016;transform:rotate(18deg);z-index:-1}
+.cat-head:before{left:2px}.cat-head:after{right:1px;transform:rotate(-18deg)}
+.eye{position:absolute;top:18px;width:11px;height:14px;background:#78d33d;border:2px solid #17210f;border-radius:50%}
+.eye:after{content:"";position:absolute;left:4px;top:1px;width:2px;height:9px;background:#10160c}
+.eye.l{left:9px}.eye.r{right:9px}
+.muzzle{position:absolute;left:20px;top:33px;width:10px;height:7px;border-bottom:2px solid #49291e;border-radius:50%}
+.cat-tail{position:absolute;right:-2px;top:24px;width:52px;height:20px;border:9px solid #d96d22;border-left:0;border-bottom-color:#f1c28d;border-radius:0 50% 50% 0;transform:rotate(-20deg)}
+.cat-leg{position:absolute;top:67px;width:12px;height:25px;background:#d96d22;border:3px solid #3a2016;border-radius:7px}
+.cat-leg.a{left:37px}.cat-leg.b{left:79px}
+#poopHole{position:absolute;left:51px;top:76px;width:14px;height:10px;background:#4b2719;border-radius:50%}
+#potato{position:absolute;z-index:8;bottom:142px;width:82px;height:76px;transform:translateX(-50%);filter:drop-shadow(0 7px 4px #0008)}
+.pbody{position:absolute;inset:5px 9px 4px;background:rgb(201,151,91);border:3px solid #4b301f;border-radius:48% 54% 45% 55%;transition:background .15s,filter .15s}
+.brow{position:absolute;top:22px;width:17px;height:4px;background:#1c1510;border-radius:3px}.brow.l{left:21px;transform:rotate(20deg)}.brow.r{right:21px;transform:rotate(-20deg)}
+.peye{position:absolute;top:31px;width:5px;height:6px;background:#16110d;border-radius:50%}.peye.l{left:28px}.peye.r{right:28px}
+.mouth{position:absolute;left:35px;top:45px;width:13px;height:7px;border-top:3px solid #211711;border-radius:50%}
+.arm{position:absolute;top:42px;width:24px;height:7px;background:#d9ad78;border:2px solid #4b301f;border-radius:6px}.arm.l{left:-5px;transform:rotate(-15deg)}.arm.r{right:-5px;transform:rotate(20deg)}
+.leg{position:absolute;bottom:-4px;width:8px;height:15px;background:#d9ad78;border:2px solid #4b301f;border-radius:6px}.leg.l{left:26px}.leg.r{right:26px}
+.bat{position:absolute;width:13px;height:78px;background:linear-gradient(90deg,#79502d,#c18a4d,#6d4528);border:2px solid #42291a;border-radius:8px;right:-9px;top:-12px;transform:rotate(38deg);transform-origin:bottom}
+.spot{position:absolute;width:5px;height:4px;background:#76513788;border-radius:50%}
+.poop{position:absolute;z-index:9;width:26px;height:25px;transform:translate(-50%,-50%);filter:drop-shadow(0 3px 2px #0008)}
+.poop div{position:absolute;background:#5a321d;border:2px solid #2e190f;border-radius:50%}
+.poop .p1{width:25px;height:13px;bottom:0}.poop .p2{width:18px;height:13px;left:4px;bottom:8px}.poop .p3{width:10px;height:10px;left:8px;bottom:16px}
+#grill{position:absolute;z-index:5;left:-10%;right:-10%;bottom:102px;height:38px;background:repeating-linear-gradient(90deg,#242424 0 7px,#555 8px 10px,#161616 11px 17px);border-top:5px solid #777;border-bottom:5px solid #111;box-shadow:0 -8px 20px #ff5a0033}
+#fire{position:absolute;z-index:3;left:0;right:0;bottom:0;height:125px;background:linear-gradient(#0000,#ff5a0018 25%,#b92700aa)}
+.flame{position:absolute;bottom:-18px;width:50px;height:110px;background:linear-gradient(#ffd85a,#ff6b18 55%,#b71f00);border-radius:55% 45% 55% 45%;transform:rotate(45deg);animation:flicker .48s infinite alternate ease-in-out;filter:blur(.3px)}
+@keyframes flicker{to{transform:translateY(12px) rotate(45deg) scale(.82,1.08)}}
+#controls{position:absolute;z-index:30;left:12px;right:12px;bottom:15px;display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:8px}
+button{border:0;border-radius:15px;padding:15px 8px;font-size:16px;font-weight:900;background:#f2dfc9;color:#2a1710;box-shadow:0 4px 0 #9b7255;touch-action:manipulation}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #9b7255}
+#take{background:#ffb13b;color:#2b1607;box-shadow:0 4px 0 #a35d0c}
+#overlay{display:none;position:absolute;z-index:50;inset:0;background:#120b0ae8;align-items:center;justify-content:center;text-align:center;padding:28px}
+#overlay.show{display:flex}.panel{width:100%;background:#2a1915;border:1px solid #ffffff20;border-radius:22px;padding:24px}
+.panel h1{margin:0 0 8px}.panel p{line-height:1.55;color:#ead7ca}.panel button{width:100%}
+.small{font-size:12px;color:#cdb8aa}
+</style>
+</head>
+<body><main id="app">
+<div id="stage"></div>
+<div class="hud">
+ <div class="card"><span>노릇함</span><b id="brown">0%</b></div>
+ <div class="card"><span>점수</span><b id="score">0</b></div>
+ <div class="card"><span>최고점수</span><b id="best">0</b></div>
+</div>
+<div id="message">똥을 피하면서 감자를 노릇하게 구워주세요!</div>
+
+<div id="cat">
+ <div class="cat-tail"></div><div class="cat-body"></div><div class="cat-head"><i class="eye l"></i><i class="eye r"></i><i class="muzzle"></i></div>
+ <div class="cat-leg a"></div><div class="cat-leg b"></div><div id="poopHole"></div>
+</div>
+
+<div id="potato">
+ <div class="pbody"></div><i class="brow l"></i><i class="brow r"></i><i class="peye l"></i><i class="peye r"></i><i class="mouth"></i>
+ <i class="arm l"></i><i class="arm r"></i><i class="leg l"></i><i class="leg r"></i><i class="bat"></i>
+ <i class="spot" style="left:20px;top:17px"></i><i class="spot" style="left:51px;top:52px"></i><i class="spot" style="left:16px;top:53px"></i>
+</div>
+<div id="grill"></div>
+<div id="fire"></div>
+
+<div id="controls">
+ <button id="left">◀ 왼쪽</button><button id="right">오른쪽 ▶</button><button id="take">🔥 지금 꺼내기</button>
+</div>
+
+<div id="overlay"><div class="panel"><h1>게임 오버</h1><p id="reason"></p><p>최종 점수 <b id="final">0</b>점</p><button id="restart">새 게임</button><p class="small">95~105%: +100점 · 정확히 100%: +150점 · 120%: 탄 감자</p></div></div>
+</main>
+<script>
+(()=>{
+const app=document.querySelector('#app'), potato=document.querySelector('#potato'), pbody=document.querySelector('.pbody'),
+cat=document.querySelector('#cat'), brownEl=document.querySelector('#brown'),scoreEl=document.querySelector('#score'),
+bestEl=document.querySelector('#best'),msg=document.querySelector('#message'),overlay=document.querySelector('#overlay'),
+reasonEl=document.querySelector('#reason'),finalEl=document.querySelector('#final'),fire=document.querySelector('#fire');
+
+for(let i=0;i<9;i++){let f=document.createElement('i');f.className='flame';f.style.left=(i*13-5)+'%';f.style.animationDelay=(-Math.random())+'s';f.style.transform=`rotate(45deg) scale(${.65+Math.random()*.65})`;fire.appendChild(f)}
+
+let x=innerWidth/2, catX=x, browning=0, score=0, best=+(localStorage.potatoBest||0), alive=true, last=performance.now(), poopTimer=0, nextPoop=1100+Math.random()*1200, poops=[], held=0;
+bestEl.textContent=best;
+
+function bounds(){return {min:45,max:app.clientWidth-45}}
+function resetPotato(){browning=0;x=app.clientWidth/2;msg.textContent='새 감자! 100%를 노려보세요.'}
+function render(){
+ let b=bounds();x=Math.max(b.min,Math.min(b.max,x));
+ potato.style.left=x+'px';cat.style.left=catX+'px';
+ brownEl.textContent=Math.floor(browning)+'%';
+ scoreEl.textContent=score;
+ let t=Math.min(1,browning/120);
+ let r=Math.round(201-105*t),g=Math.round(151-105*t),bl=Math.round(91-62*t);
+ pbody.style.background=`rgb(${r},${g},${bl})`;
+ if(browning>=105)pbody.style.filter=`brightness(${Math.max(.45,1-(browning-105)/35)})`;
+ else pbody.style.filter='';
+}
+function dropPoop(){
+ let el=document.createElement('div');el.className='poop';el.innerHTML='<div class="p1"></div><div class="p2"></div><div class="p3"></div>';
+ app.appendChild(el); poops.push({el,x:catX,y:148,v:190+Math.random()*70});
+}
+function rectHit(px,py){
+ const pr=potato.getBoundingClientRect(), ar=app.getBoundingClientRect();
+ return px>pr.left-ar.left+8 && px<pr.right-ar.left-8 && py>pr.top-ar.top+5 && py<pr.bottom-ar.top-4;
+}
+function gameOver(reason){
+ if(!alive)return; alive=false; reasonEl.textContent=reason+' 감자를 버렸습니다.';finalEl.textContent=score;
+ if(score>best){best=score;localStorage.potatoBest=best;bestEl.textContent=best}
+ overlay.classList.add('show');
+}
+function take(){
+ if(!alive)return;
+ const n=Math.floor(browning);
+ let add=0;
+ if(n===100){add=150;msg.textContent='완벽한 100%! +150점!';}
+ else if(browning>=95&&browning<=105){add=100;msg.textContent='노릇노릇 성공! +100점!';}
+ else {msg.textContent=`${n}%에 꺼냈습니다. 점수 없음!`;}
+ score+=add;
+ if(score>best){best=score;localStorage.potatoBest=best;bestEl.textContent=best}
+ setTimeout(()=>{if(alive)resetPotato()},350);
+}
+function loop(now){
+ if(!alive)return;
+ let dt=Math.min(.04,(now-last)/1000);last=now;
+ // 계속 굽힘: 약 19초에 100%
+ browning+=dt*5.25;
+ if(browning>=120){browning=120;render();gameOver('감자가 120%까지 타버렸습니다!');return}
+ // 고양이는 최상단에서 감자를 계속 추적
+ let desired=x; catX+=(desired-catX)*Math.min(1,dt*3.2);
+ // 입력 이동
+ if(held<0)x-=dt*205;if(held>0)x+=dt*205;
+ poopTimer+=dt*1000;
+ if(poopTimer>=nextPoop){poopTimer=0;nextPoop=850+Math.random()*1350;dropPoop()}
+ for(let i=poops.length-1;i>=0;i--){
+   let p=poops[i];p.y+=p.v*dt;p.el.style.left=p.x+'px';p.el.style.top=p.y+'px';
+   if(rectHit(p.x,p.y)){p.el.remove();poops.splice(i,1);render();gameOver('고양이 똥에 맞았습니다!');return}
+   if(p.y>app.clientHeight-105){p.el.remove();poops.splice(i,1)}
+ }
+ render();requestAnimationFrame(loop);
+}
+function hold(dir){held=dir}
+['pointerup','pointercancel','pointerleave'].forEach(ev=>window.addEventListener(ev,()=>hold(0)));
+document.querySelector('#left').addEventListener('pointerdown',()=>hold(-1));
+document.querySelector('#right').addEventListener('pointerdown',()=>hold(1));
+document.querySelector('#take').addEventListener('click',take);
+window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')held=-1;if(e.key==='ArrowRight')held=1;if(e.key===' '){e.preventDefault();take()}});
+window.addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight'].includes(e.key))held=0});
+document.querySelector('#restart').onclick=()=>{
+ poops.forEach(p=>p.el.remove());poops=[];score=0;browning=0;alive=true;overlay.classList.remove('show');x=app.clientWidth/2;catX=x;poopTimer=0;last=performance.now();render();requestAnimationFrame(loop)
+};
+window.addEventListener('resize',render);
+x=app.clientWidth/2;catX=x;render();requestAnimationFrame(loop);
+})();
+</script>
+</main></body></html>
